@@ -27,7 +27,7 @@ require 'spec_helper'
      end
    end
    describe "when the email format isn't correct" do
-   address =  %w[pippo.example.it pluto@yahoo.it.32 pap@.erino@alice.it]
+   address =  %w[pippo.example.it pluto@yahoo.it.32 pap@.erino@alice.it foo@bar..com]
    address.each do |valid_block|
      it do
        @user.email=valid_block                                                  #caso3
@@ -77,4 +77,15 @@ end
      before {@user.password="a"*5}
      it {should_not be_valid}
    end
+   describe "when isn't valid downcasing before the storage of the email into the database" do
+     let(:mix_casing) {"fOoO@BAAaAR.com"}
+    before do
+      @user.email=mix_casing
+      @user.save
+    end
+    it do
+    expect(@user.reload.email).to eq mix_casing.downcase
+     end
+   end
+     
    end
