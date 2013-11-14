@@ -9,7 +9,8 @@ require 'spec_helper'
    it {should respond_to(:password_digest)}
    it {should respond_to(:password)}
    it {should respond_to(:password_confirmation)}
-   it {should respond_to (:authenticate)}
+   it {should respond_to(:authenticate)}
+   it {should respond_to(:remember_token)}
    it {should be_valid}
    
    describe 'when name is not present' do
@@ -87,5 +88,8 @@ end
     expect(@user.reload.email).to eq mix_casing.downcase
      end
    end
-     
+   describe "when the remember_token is correctly created" do
+     before {@user.save}
+     its(:remember_token) {should_not be_blank}
+   end  
    end
