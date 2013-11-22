@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   attr_accessible :name, :email, :password, :password_confirmation
-  validates :name, presence: true, length: {maximum: 20, minimum: 2}
+  attr_protected :admin
+  validates :name, presence: true, length: {maximum: 50, minimum: 2}
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
   validates :email, presence: true, format:{with: VALID_EMAIL_REGEX}, 
                     uniqueness: {case_sensitive: false}
@@ -19,6 +20,7 @@ class User < ActiveRecord::Base
  end
  
  private 
+ 
  def create_remember_token
   self.remember_token=User.encrypt(User.new_remember_token)
   end

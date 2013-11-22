@@ -26,4 +26,20 @@ def sign_out(user)
   self.current_user = nil
   cookies.delete(:remember_token)
 end
+def current_user?(user)
+  user==current_user
 end
+
+def storing
+  session[:return_to] = request.url if request.get? 
+end
+
+def redirecting(default)
+  redirect_to(session[:return_to] || default)
+  session.delete(:return_to)
+end
+def admin?
+  current_user.admin?
+end
+end
+

@@ -1,18 +1,12 @@
-<h2>Users listing:</h2>
+<%=provide(:title, "All users")%>
 
+<h2>All users:</h2>
 
+<%=will_paginate%>
+<ul class="users">
+  
+  <%=render @users%>
+  
+</ul>
 
-<table border="0" cellspacing="10">
-	<tr>
-		<td><font size="2">Nome</font></td>
-		<td><font size="2">Email</font></td>
-		</tr>
-		<%@user.each do |user|%>
-		<tr>
-			<td><font color="DARKGRAY" size="2"><%=user.name%></font></td>
-			<td><font color="GRAY" size="2"><%=user.email%></font></td>
-			<td><font color="GRAY" size="2"><%=link_to "show", user_path(user)%></font></td>
-		</tr>
-		<%end%>
-</table>
-
+<%=will_paginate%>

@@ -18,9 +18,14 @@ SampleApp::Application.configure do
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
+  
+  # Raise exception on mass assignment protection for Active Record models
+  config.active_record.mass_assignment_sanitizer = :strict
 
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
+   # Do not compress assets
+  config.assets.compress = false
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
