@@ -59,6 +59,17 @@ describe "Authentication" do
     before {visit users_path}
     it {should have_selector("div.alert.alert-notice", text: "Before you have to Sign in!")}
   end
+  describe "that try to manipulate their posts" do
+    describe "sending a create request" do
+    before {post microposts_path}
+    specify {expect(response).to redirect_to signin_path}  
+    end
+    describe "sending a delete request" do
+    let(:micropost) {FactoryGirl.create(:micropost, user: user)}
+    before {delete micropost_path(micropost)}
+    specify {expect(response).to redirect_to signin_path}
+  end
+  end
     end  
     end 
     
@@ -88,5 +99,6 @@ describe "Authentication" do
         end
    end
    end
+   
   end
   

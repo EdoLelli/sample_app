@@ -30,6 +30,13 @@ def current_user?(user)
   user==current_user
 end
 
+def signed_in_user
+  unless signed_in?
+   storing 
+  redirect_to signin_path, notice: "Before you have to Sign in!" 
+  end
+end
+
 def storing
   session[:return_to] = request.url if request.get? 
 end

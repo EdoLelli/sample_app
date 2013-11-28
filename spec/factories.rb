@@ -9,4 +9,8 @@ FactoryGirl.define do
       after(:create) {|user| user.toggle!(:admin)}
     end
   end
+ factory :micropost do
+   sequence(:content) {|n| "Comment number #{n}"}
+   user
+ end
 end

@@ -131,6 +131,23 @@ describe "profile page" do
          specify {expect(user.reload.email).to eq new_email}
      end
    end
+   describe "when visiting a User page" do
+     let(:user) {FactoryGirl.create :user}
+     let!(:micropost_1) {FactoryGirl.create(:micropost, user: user, created_at: 1.day.ago)}
+     let!(:micropost_2) {FactoryGirl.create(:micropost, user: user, created_at: 1.hours.ago)}
+    before do
+      sign_in user
+      visit user_path(user)
+    end
+    it {should have_title(user.name)}
+    it {should have_content(user.name)}
+    it "should have displayed al his microposts" do
+       user.microposts.each do |mp|
+         expect(page).to (have_content(mp.content))
+       end
+     end
+    it {should have_content(user.microposts.count)}
+   end
    
  end
 

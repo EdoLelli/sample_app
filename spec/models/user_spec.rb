@@ -12,6 +12,8 @@ require 'spec_helper'
    it {should respond_to(:authenticate)}
    it {should respond_to(:remember_token)}
    it {should respond_to(:admin)}
+   it {should respond_to(:microposts)}
+   it {should respond_to(:feed)}
    it {should be_valid}
    
    describe 'when name is not present' do
@@ -100,4 +102,28 @@ end
      end
      it {should be_admin}
    end
+   
+   describe "user's micropost" do
+     before {@user.save}
+     let!(:micropost_first) {FactoryGirl.create(:micropost, user:@user, created_at: 1.day.ago)}
+     let!(:micropost_last) {FactoryGirl.create(:micropost, user:@user, created_at: 1.hours.ago)}
+     
+     describe "unfollowed-followed micropost" do
+         let!(:unfollowed) {FactoryGirl.create :micropost, user:(FactoryGirl.create :user)}
+         
+     describe "feed" do
+       its(:feed) {should include(micropost_first)}
+       its(:feed) {should include(micropost_last)}
+       its(:feed) {should_not include(unfollowed)}
+     end
+      end
+    it "last should appear for first" do
+      expect(@user.microposts.to_a).to eq [micropost_last, micropost_first]
+    end
+    describe "should be automatically destroyed, when a user is destroyed" do
+      before {@user.destroy}
+      its(:microposts) {should be_empty}
+    end
+   end
+ 
    end

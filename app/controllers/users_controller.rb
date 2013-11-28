@@ -8,10 +8,11 @@ class UsersController < ApplicationController
   
   def show
     @user=User.find(params[:id])
-    
+    @microposts=current_user.microposts.paginate(page: params[:page])
   end
   def new
     @user=User.new
+    
   end
   def create
    @user=User.new(params[:user]) 
@@ -27,9 +28,9 @@ class UsersController < ApplicationController
     
   end
   def update
-    @user=User.find(params[:id])
-    if @user.update(params[:user])
-      redirect_to @user
+    
+    if current_user.update(params[:user])
+      redirect_to current_user
       flash[:success]="Account correctly modified"
     else 
       flash.now[:error]="Error"
@@ -44,14 +45,10 @@ class UsersController < ApplicationController
      redirect_to users_path
    end
       end
+   
   
 
-def signed_in_user
-  unless signed_in?
-   storing 
-  redirect_to signin_path, notice: "Before you have to Sign in!" 
-  end
-end
+
 
 def correct_user
   @user=User.find(params[:id])

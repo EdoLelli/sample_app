@@ -14,6 +14,22 @@ end
 
     it { should have_content('Sample App') }
     it { should have_title(full_title('')) }
+    describe "simulating the creation of 2 user's microposts" do
+    let(:user) {FactoryGirl.create :user}
+     let!(:micropost_first) {FactoryGirl.create(:micropost, user: user, created_at: 1.day.ago)}
+     let!(:micropost_last) {FactoryGirl.create(:micropost, user: user, created_at: 1.hours.ago)}
+     describe "and finally seeing the feed in our home page" do
+       before do
+         sign_in user
+         visit root_path
+       end
+       it do
+         user.feed.each do |item|
+           expect(page).to have_selector("li##{item.id}", text: item.content)
+         end
+       end
+     end
+     end
   end
   
    describe "Help page" do
