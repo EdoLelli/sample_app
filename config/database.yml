@@ -32,7 +32,7 @@ test:
 production:
   adapter: mysql2
   encoding: utf8
-  database: sample_db
+  database: mysql://b77f8395fa42f6:7a3f0b97@us-cdbr-east-04.cleardb.com/heroku_df686ca26dca8ea?reconnect=true
   pool: 5
   username: root
   password:
