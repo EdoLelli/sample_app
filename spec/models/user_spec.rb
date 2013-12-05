@@ -14,6 +14,9 @@ require 'spec_helper'
    it {should respond_to(:admin)}
    it {should respond_to(:microposts)}
    it {should respond_to(:feed)}
+   it {should respond_to(:relationships)}
+   it {should respond_to(:follow!)}
+   it {should respond_to(:following?)}
    it {should be_valid}
    
    describe 'when name is not present' do
@@ -110,11 +113,20 @@ end
      
      describe "unfollowed-followed micropost" do
          let!(:unfollowed) {FactoryGirl.create :micropost, user:(FactoryGirl.create :user)}
-         
+         let(:followed) { FactoryGirl.create(:user) }
      describe "feed" do
+       before do
+        @user.follow!(followed)
+        3.times { followed.microposts.create!(content: "Mpost") }
+      end
        its(:feed) {should include(micropost_first)}
        its(:feed) {should include(micropost_last)}
        its(:feed) {should_not include(unfollowed)}
+       its(:feed) do
+        followed.microposts.each do |micropost|
+          should include(micropost)
+        end
+      end
      end
       end
     it "last should appear for first" do
@@ -125,5 +137,25 @@ end
       its(:microposts) {should be_empty}
     end
    end
- 
+   describe "following action" do
+     let(:other_user) {FactoryGirl.create :user}
+     before do
+       @user.save
+       @user.follow!(other_user)
+     end
+     describe "follow" do
+    
+     it {should be_following(other_user)}
+     its(:followed_users) {should include(other_user)}
+     end
+     describe "unfollow" do
+       before {@user.unfollow!(other_user)}
+       it {should_not be_following(other_user)}
+       its(:followed_users) {should_not include(other_user)}
+     end
+     describe "followers listing" do
+       subject {other_user}
+       its(:followers) {should include(@user)}
+     end
+   end
    end

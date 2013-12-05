@@ -60,7 +60,10 @@ describe "UsersPages" do
 
 
 describe "profile page" do
-  before {visit user_path(user)}
+  before do
+    sign_in user
+    visit user_path(user)
+  end
   let(:user) { FactoryGirl.create(:user) }
    it {should have_content(user.name)}
   it {should have_title(user.name)}
@@ -94,7 +97,7 @@ describe "profile page" do
        before {click_button "Create my account"}
        let(:user) {User.find_by(email:"dedo@example.org")}
        it {should have_title(user.name)}
-       it {should have_selector('div.alert.alert-success', text: "Welcome to my Sample App!")}
+       it {should have_selector('div.alert.alert-success', text: "Welcome to Sample App!")}
      end
    end
  end
@@ -148,6 +151,55 @@ describe "profile page" do
      end
     it {should have_content(user.microposts.count)}
    end
-   
+   describe "following/followers" do
+     let(:user) {FactoryGirl.create :user}
+     let(:other_user) {FactoryGirl.create :user}
+     before {user.follow!(other_user)}
+     describe "following" do
+       before do
+         sign_in user
+         visit following_user_path(user)
+       end
+       it {should have_title("Following")}
+       it {should have_link(other_user.name, href: user_path(other_user))}
+     end
+     describe "followers" do
+       before do
+         sign_in user
+         visit followers_user_path(other_user)
+       end
+       it {should have_title("Followers")}
+       it {should have_link(user.name, href: user_path(user))}
+     end
+     describe "following the other user, with the following button " do
+       
+       describe "follow button" do
+           before do
+         user.unfollow!(other_user)
+         sign_in user
+         visit user_path(other_user)
+       end  
+       it do
+          expect{click_button("Follow")}.to change(user.followed_users, :count).by(1)
+       end
+       it do
+          expect{click_button("Follow")}.to change(other_user.followers, :count).by(1)
+       end 
+     end
+     describe "unfollow button" do
+         before do
+         
+         sign_in user
+         visit user_path(other_user)
+       end 
+       it do
+          expect{click_button("Unfollow")}.to change(user.followed_users, :count).by(-1)
+       end
+       it do
+          expect{click_button("Unfollow")}.to change(other_user.followers, :count).by(-1)
+       end 
+     end
+   end
+ end
  end
 

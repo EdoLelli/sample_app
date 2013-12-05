@@ -39,7 +39,7 @@ describe "MicropostPages" do
     let!(:micropost) {FactoryGirl.create(:micropost, user: user) }
 
     describe "as correct user" do
-     before {visit user_path(user)}
+     before {visit root_path}
      it "should delete a micropost" do
         expect { click_link "delete"}.to change(Micropost, :count).by(-1)
       end

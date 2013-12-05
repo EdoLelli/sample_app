@@ -70,6 +70,14 @@ describe "Authentication" do
     specify {expect(response).to redirect_to signin_path}
   end
   end
+  describe "that try to see the followers of a user" do
+    before {visit followers_user_path(user)}
+    it {should have_title("Sign In")}
+  end
+  describe "that try to see the following of a user" do
+    before {visit following_user_path(user)}
+    it {should have_title("Sign In")}
+  end
     end  
     end 
     

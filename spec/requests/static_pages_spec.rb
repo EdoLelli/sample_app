@@ -28,9 +28,21 @@ end
            expect(page).to have_selector("li##{item.id}", text: item.content)
          end
        end
-     end
-     end
+      describe "follower/following count" do
+        let(:other_user) {FactoryGirl.create :user}
+        before do
+          sign_in other_user
+          visit user_path(user)
+          other_user.follow!(user)
+          visit root_path
+        end
+        it {should have_link("1 FOLLOWING"), href: following_user_path(other_user)}
+        it {should have_link("0 FOLLOWER"), href: following_user_path(other_user)}
+      end
+    end
   end
+  end
+    
   
    describe "Help page" do
     before { visit help_path }
