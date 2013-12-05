@@ -30,7 +30,7 @@ describe "MicropostPages" do
      end
      describe "success message" do
        before {submit}
-       it {should have_content("Micropost correctly posted!")}
+       it {should have_content("Micropost correctly created")}
      end   
      end
   end
